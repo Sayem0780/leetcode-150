@@ -1,0 +1,72 @@
+You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+
+Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at nums[i], you can jump to any nums[i + j] where:
+
+0 <= j <= nums[i] and
+i + j < n
+Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
+
+ 
+
+Example 1:
+
+Input: nums = [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.
+Example 2:
+
+Input: nums = [2,3,0,1,4]
+Output: 2
+ 
+
+Constraints:
+
+1 <= nums.length <= 104
+0 <= nums[i] <= 1000
+It's guaranteed that you can reach nums[n - 1].
+
+
+Solution:
+
+Here when we iterate any index of this array [2,3,1,1,4] for example index[0] what can be done ...
+
+it can go 3 or 1. Okay now we should chose? 
+ans: The maximum one. 
+Why? Bcz we need to move as minimum as possible. And the last line of question hints "The test cases are generated such that you can reach nums[n - 1]." So it's not like Jump Game 1.
+where you need to verify whether it's possible to reach or not. Here definately you will reach.
+
+So for index[0] or 2 we chose 3. What does it reflect ? It reflects the maximum value is taken from the range of index i+1 or 0+1 to index[i]or 2 means (1 to 2). 
+
+So every time we iterate any index we need to find out the maximum value between i+1 to index[i]. 
+
+And to move for next eteration untill we reach the maximum value is grater than last index we need to continuiously update this range. What we will do by declaring l and r. 
+Where l is the left most index and r will be the maximum  value we find.
+
+So the translation of this intuation
+
+class Solution(object):
+   def jump(self,nums):
+      res=0
+      l=r=0
+      far=0
+      last_index=len(nums)-1
+
+      while r<last_index:
+          
+          for i in range(l,r+1):
+             far=max(far,i+nums[i])
+
+          l=r+1
+          r=far
+          res+=1
+      return res
+
+Time complexity:
+
+The function does use a nested loop. The outer while loop runs until the right pointer r is less than last_index, and for each iteration of the while loop, 
+the inner for loop runs from l to r. This might give the impression that the time complexity is quadratic, O(n2), because of the nested loops.
+
+However, the key point here is that the inner for loop does not start from the beginning of the array each time; it starts from l and goes up to r, and these pointers are updated in such a way that each element in the array is visited at most once. The far variable keeps track of the farthest index that can be reached, and l and r are updated based on this value.
+So, even though there is a nested loop, the algorithm does not perform n2
+ operations. The total number of operations across all iterations of the
+         
